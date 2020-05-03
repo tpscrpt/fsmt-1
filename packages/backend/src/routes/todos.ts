@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { TodoResource } from "../resources/todo";
 import { Route } from "../classes/route";
+import { BodyOnlyPostRequest } from "../types/request";
 
 const router = Router();
 
@@ -20,4 +21,17 @@ router.get("/", async (_, res) => {
   res.send(JSON.stringify(mockTodos));
 });
 
-export const route = new Route("todos", router);
+export type PostTodoRequestBody = {
+  content: string;
+  tags: string[];
+};
+type PostTodoRequest = BodyOnlyPostRequest<PostTodoRequestBody>;
+
+router.post("/", async (req: PostTodoRequest, res) => {
+  console.log(req.body);
+  const { content, tags } = req.body;
+  console.log(content, tags);
+  res.send("OK");
+});
+
+export const route = new Route("todos?", router);
