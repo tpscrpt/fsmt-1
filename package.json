@@ -1,0 +1,9 @@
+{
+  "name": "fsmt-1",
+  "version": "1.0.0",
+  "private": true,
+  "repository": "git@github.com:jeremigendron/fsmt-1.git",
+  "author": "Jeremi Gendron <jeremigendron@hotmail.com>",
+  "license": "UNLICENSED",
+  "workspaces": ["packages/*"]
+}
