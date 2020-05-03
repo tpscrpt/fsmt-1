@@ -9,7 +9,8 @@
     "packages/*"
   ],
   "scripts": {
-    "lint": "eslint . --ext ts,tsx"
+    "lint": "eslint . --ext ts,tsx",
+    "test": "yarn workspaces run test"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.30.0",
