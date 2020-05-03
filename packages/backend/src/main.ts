@@ -1,6 +1,8 @@
+import { Server } from "http";
 import express from "express";
 import cors from "cors";
 import { json } from "body-parser";
+import mongoose from "mongoose";
 import { routes } from "./routes";
 
 const app = express();
@@ -17,6 +19,9 @@ routes.forEach((route) => {
   app.use(`/${route.name}`, route.router);
 });
 
-app.listen(PORT, () => {
-  console.log(`Listening on port: ${PORT}`);
-});
+export async function setup(mongoUri: string): Promise<Server> {
+  await mongoose.connect(mongoUri);
+  return app.listen(PORT, () => {
+    console.log(`Listening on port: ${PORT}`);
+  });
+}
