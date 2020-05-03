@@ -1,8 +1,10 @@
 import React from "react";
+import Axios from "axios";
 import "./App.css";
 import logo from "./logo.svg";
 
 function App(): JSX.Element {
+  Axios.get("http://localhost:9000").then((response) => console.log(response.data));
   return (
     <div className="App">
       <header className="App-header">
