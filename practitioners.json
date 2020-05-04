@@ -4,7 +4,8 @@
     "properties": {
       "city": "Montreal",
       "favoriteFood": "caffeine",
-      "lifeGoal": "Sleep a lot and host zoom meetings"
+      "lifeGoal": "Sleep a lot and host zoom meetings",
+      "middleName": "none"
     }
   }
 ]
