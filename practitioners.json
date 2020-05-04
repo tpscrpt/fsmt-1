@@ -1,10 +1,18 @@
-[
+﻿[
   {
     "name": "Jérémi Gendron",
     "properties": {
       "city": "Montreal",
       "favoriteFood": "caffeine",
       "lifeGoal": "Sleep a lot and host zoom meetings"
+    }
+  },
+  {
+    "name": "Erfan Huq",
+    "properties": {
+      "city": "Toronto",
+      "favoriteFood": "Pizza",
+      "lifeGoal": "Maximize profit, minimize effort"
     }
   }
 ]
