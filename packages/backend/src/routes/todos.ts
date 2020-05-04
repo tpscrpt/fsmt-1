@@ -28,10 +28,10 @@ export type PostTodoRequestBody = {
   tags: string[];
 };
 type PostTodoRequest = BodyOnlyPostRequest<PostTodoRequestBody>;
+export type PostTodoResponseData = string;
 
 router.post("/", async (req: PostTodoRequest, res) => {
   const { content, tags } = req.body;
-  console.log(content, tags);
   const todoId = uuidv4();
   new Todo({
     todoId,
