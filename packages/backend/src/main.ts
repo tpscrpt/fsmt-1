@@ -4,6 +4,7 @@ import cors from "cors";
 import { json } from "body-parser";
 import mongoose from "mongoose";
 import { routes } from "./routes";
+import { handleAssertionError } from "./errors";
 
 const app = express();
 const PORT = 9000;
@@ -18,6 +19,8 @@ app.get("/", (_, res) => {
 routes.forEach((route) => {
   app.use(`/${route.name}`, route.router);
 });
+
+app.use(handleAssertionError);
 
 export async function setup(mongoUri: string): Promise<Server> {
   await mongoose.connect(mongoUri);
