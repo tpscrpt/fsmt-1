@@ -1,4 +1,10 @@
-﻿[
+﻿[ {"name":"Jesse Amamgbu",
+   "properties":{
+     "city":"Abuja",
+     "favoriteFood":"Rice",
+     "lifeGoal":"Eat. Sleep. Code. Repeat."
+   }
+  },
   {
     "name": "Jérémi Gendron",
     "properties": {
