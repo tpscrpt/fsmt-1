@@ -23,8 +23,8 @@ routes.forEach((route) => {
 app.use(handleAssertionError);
 
 export async function setup(mongoUri: string): Promise<Server> {
-  await mongoose.connect(mongoUri);
+  await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
   return app.listen(PORT, () => {
-    console.log(`Listening on port: ${PORT}`);
+    if (process.env.NODE_ENV !== "test") console.log(`Listening on port: ${PORT}`);
   });
 }

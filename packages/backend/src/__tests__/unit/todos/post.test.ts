@@ -5,6 +5,7 @@ import { MongoMemoryServer } from "mongodb-memory-server-global";
 import { setup } from "../../../main";
 import { PostTodoResponseData, PostTodoRequestBody } from "../../../routes/todos";
 import { todos } from "../../__fixtures__/todos";
+import { uuidRegex } from "../../__fixtures__/constants";
 
 let server: Server;
 let mongoDb: MongoMemoryServer;
@@ -29,7 +30,7 @@ describe("Post todo", () => {
   it("should return 200 status and a valid uuid", async () => {
     const response = await Axios.post<PostTodoResponseData>("http://localhost:9000/todo", postTodoRequestBody);
     expect(response.status).toBe(200);
-    expect(response.data.body).toMatch(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/);
+    expect(response.data.body).toMatch(uuidRegex);
     expect(response.data.error).not.toBeDefined();
   });
   it("should fail with 400 bad request", async () => {
