@@ -3,7 +3,7 @@ import { Document, Schema, model } from "mongoose";
 export type TodoResource = {
   todoId: string;
   content: string;
-  created: Date;
+  created: number;
   tags: string[];
 };
 
@@ -17,7 +17,11 @@ export const Todo = model<TodoSchema>(
       type: String,
     },
     content: String,
-    created: Date,
+    created: {
+      type: Number,
+      min: new Date("2020").getTime(),
+      max: new Date("2100").getTime(),
+    },
     tags: [String],
   }),
 );

@@ -38,7 +38,6 @@ describe("Post todo", () => {
         content: postTodoRequestBody.content,
         tags: "",
       });
-      console.log(response.status, response.data);
       expect(response.status).toBe(400);
       expect(response.data.error).toBe("Invalid field provided: tags");
     } catch (e) {
