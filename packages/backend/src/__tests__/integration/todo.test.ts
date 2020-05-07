@@ -7,6 +7,7 @@ import { todos } from "../__fixtures__/todos";
 import { GetTodoResponseData, PostTodoResponseData } from "../../routes/todos";
 import { PostTodoRequestBody } from "../../routes/todos";
 import { uuidRegex } from "../__fixtures__/constants";
+import { TodoResource } from "../../resources/todo";
 
 let server: Server;
 let mongoDb: MongoMemoryServer;
@@ -38,5 +39,20 @@ describe("Interaction between POST and GET single todo", () => {
     const getTodo = getResponse.data.body;
     expect({ content: getTodo?.content, tags: getTodo?.tags }).toMatchObject(postTodoRequestBody);
     expect(getTodo?.created).toBeGreaterThan(initialTodo.created);
+  });
+});
+
+describe("Interaction between posting todos and retrieving each of them individually after", () => {
+  it("should post and retrieve multiple todos", async () => {
+    const postedTodoIds: string[] = [];
+    todos.forEach(async (originalTodo) => {
+      const postTodoRequestBody: PostTodoRequestBody = { content: originalTodo.content, tags: originalTodo.tags };
+      const postResponse = await Axios.post<PostTodoResponseData>("http://localhost:9000/todo", postTodoRequestBody);
+      expect(postResponse.status).toBe(200);
+      postedTodoIds.push(postResponse.data.body || "");
+    });
+    postedTodoIds.forEach(async (todoId) => {
+      const getResponse = await Axios.get<GetTodoResponseData>(`http://localhost:9000/todo/${todoId}`);
+    });
   });
 });
