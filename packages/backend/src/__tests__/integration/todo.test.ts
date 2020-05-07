@@ -4,7 +4,7 @@ import { disconnect } from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server-global";
 import { setup } from "../../main";
 import { todos } from "../__fixtures__/todos";
-import { GetTodoResponseData, PostTodoResponseData } from "../../routes/todos";
+import { GetTodoResponseData, PostTodoResponseData, GetTodosResponseData } from "../../routes/todos";
 import { PostTodoRequestBody } from "../../routes/todos";
 import { uuidRegex } from "../__fixtures__/constants";
 import { TodoResource } from "../../resources/todo";
@@ -42,17 +42,21 @@ describe("Interaction between POST and GET single todo", () => {
   });
 });
 
-describe("Interaction between posting todos and retrieving each of them individually after", () => {
+describe("Interaction between posting todos and retrieving all of them afterwards", () => {
   it("should post and retrieve multiple todos", async () => {
     const postedTodoIds: string[] = [];
-    todos.forEach(async (originalTodo) => {
-      const postTodoRequestBody: PostTodoRequestBody = { content: originalTodo.content, tags: originalTodo.tags };
-      const postResponse = await Axios.post<PostTodoResponseData>("http://localhost:9000/todo", postTodoRequestBody);
-      expect(postResponse.status).toBe(200);
-      postedTodoIds.push(postResponse.data.body || "");
-    });
-    postedTodoIds.forEach(async (todoId) => {
-      const getResponse = await Axios.get<GetTodoResponseData>(`http://localhost:9000/todo/${todoId}`);
+    await Promise.all(
+      todos.map(async (originalTodo) => {
+        const postTodoRequestBody: PostTodoRequestBody = { content: originalTodo.content, tags: originalTodo.tags };
+        const postResponse = await Axios.post<PostTodoResponseData>("http://localhost:9000/todo", postTodoRequestBody);
+        expect(postResponse.status).toBe(200);
+        postedTodoIds.push(postResponse.data.body || "");
+      }),
+    );
+    const getResponse = await Axios.get<GetTodosResponseData>("http://localhost:9000/todos");
+    expect(getResponse.status).toBe(200);
+    getResponse.data.body?.forEach(({ todoId: getTodoId }) => {
+      expect(postedTodoIds.includes(getTodoId)).toBe(true);
     });
   });
 });
