@@ -15,6 +15,12 @@ export type AddTodoAction = {
   payload: TodoResource;
 };
 
+export const ADD_TODOS = "ADD_TODOS";
+export type AddTodosAction = {
+  type: typeof ADD_TODOS;
+  payload: TodoResource[];
+};
+
 export const GET_TODOS_FETCHING = "GET_TODOS_FETCHING";
 export type GetTodosFetchingAction = {
   type: typeof GET_TODOS_FETCHING;
@@ -27,7 +33,12 @@ export type GetTodosErrorAction = {
   payload: string;
 };
 
-export type TodoActionType = AddTodoAction | GetTodosFetchingAction | GetTodosErrorAction | SetFilterTagAction; // | RemoveTodoAction
+export type TodoActionType =
+  | AddTodoAction
+  | AddTodosAction
+  | GetTodosFetchingAction
+  | GetTodosErrorAction
+  | SetFilterTagAction; // | RemoveTodoAction
 
 export type TodoStateTodos = {
   [key: string]: TodoResource;
@@ -37,7 +48,11 @@ export type TodoStateTags = {
     [key: string]: boolean;
   };
 };
-
+export type TodoStateFetching = {
+  getTodos: boolean;
+  getTodo: boolean;
+  postTodo: boolean;
+};
 export type TodoState = {
   // mapping of todoId to TodoResource
   todos: TodoStateTodos;
@@ -45,11 +60,7 @@ export type TodoState = {
   tags: TodoStateTags;
   // tag with which to filter todos
   filterTag: string;
-  fetching: {
-    getTodos: boolean;
-    getTodo: boolean;
-    postTodo: boolean;
-  };
+  fetching: TodoStateFetching;
   errors: {
     getTodos: string;
     getTodo: string;

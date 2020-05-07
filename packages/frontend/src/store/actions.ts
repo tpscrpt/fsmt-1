@@ -5,6 +5,7 @@ import {
   GET_TODOS_ERROR,
   SetFilterTagAction,
   SET_FILTER_TAG,
+  ADD_TODOS,
 } from "./types";
 import { TodoResource } from "backend/src/resources/todo";
 import { client } from "../services/client";
@@ -27,11 +28,19 @@ export function addTodo(todo: TodoResource): TodoActionType {
   };
 }
 
-export function getTodosFetching(payload: boolean): TodoActionType {
+export function addTodos(todos: TodoResource[]): TodoActionType {
+  console.log("addTodos");
+  return {
+    type: ADD_TODOS,
+    payload: todos,
+  };
+}
+
+export function getTodosFetching(): TodoActionType {
   console.log("getTodosFetching");
   return {
     type: GET_TODOS_FETCHING,
-    payload,
+    payload: true,
   };
 }
 
@@ -47,12 +56,11 @@ export const getTodos = (): ThunkAction<void, RootState, unknown, TodoActionType
   dispatch,
 ): Promise<void> => {
   console.log("getTodos");
-  dispatch(getTodosFetching(true));
+  dispatch(getTodosFetching());
   const response = await client.getTodos();
   switch (response.status) {
     case 200:
-      await Promise.all((response.data.body as TodoResource[]).map((todo) => dispatch(addTodo(todo))));
-      dispatch(getTodosFetching(false));
+      dispatch(addTodos(response.data.body as TodoResource[]));
       break;
     default:
       dispatch(getTodosError(response.data.error || "Unknown"));

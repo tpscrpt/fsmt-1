@@ -6,6 +6,8 @@ import {
   GET_TODOS_FETCHING,
   GET_TODOS_ERROR,
   SET_FILTER_TAG,
+  ADD_TODOS,
+  TodoStateTodos,
 } from "./types";
 
 const initialState: TodoState = {
@@ -42,10 +44,17 @@ export function todoReducer(state = initialState, action: TodoActionType): TodoS
     case GET_TODOS_ERROR:
       return {
         ...state,
-        errors: {
-          ...state.errors,
-          getTodos: action.payload,
+        fetching: {
+          ...state.fetching,
+          getTodos: false,
         },
+        errors:
+          action.payload === ""
+            ? state.errors
+            : {
+                ...state.errors,
+                getTodos: action.payload,
+              },
       };
     case ADD_TODO:
       return {
@@ -59,6 +68,32 @@ export function todoReducer(state = initialState, action: TodoActionType): TodoS
           });
           return tags;
         })(),
+      };
+    case ADD_TODOS:
+      return {
+        ...state,
+        todos: {
+          ...state.todos,
+          ...((): TodoStateTodos => {
+            const todos: TodoStateTodos = {};
+            action.payload.forEach((todo) => (todos[todo.todoId] = todo));
+            return todos;
+          })(),
+        },
+        tags: ((): TodoStateTags => {
+          const tags = state.tags;
+          action.payload.forEach((todo) => {
+            todo.tags.forEach((tag) => {
+              if (!tags[tag]) tags[tag] = {};
+              tags[tag][todo.todoId] = true;
+            });
+          });
+          return tags;
+        })(),
+        fetching: {
+          ...state.fetching,
+          getTodos: false,
+        },
       };
     default:
       return state;
