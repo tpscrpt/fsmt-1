@@ -1,8 +1,26 @@
-import { ADD_TODO, TodoActionType, AppThunk, GET_TODOS_FETCHING, GET_TODOS_ERROR } from "./types";
+import {
+  ADD_TODO,
+  TodoActionType,
+  GET_TODOS_FETCHING,
+  GET_TODOS_ERROR,
+  SetFilterTagAction,
+  SET_FILTER_TAG,
+} from "./types";
 import { TodoResource } from "backend/src/resources/todo";
 import { client } from "../services/client";
+import { ThunkAction } from "redux-thunk";
+import { RootState } from ".";
+
+export function setFilterTag(payload: string): SetFilterTagAction {
+  console.log("setFilterTag");
+  return {
+    type: SET_FILTER_TAG,
+    payload,
+  };
+}
 
 export function addTodo(todo: TodoResource): TodoActionType {
+  console.log("addTodo");
   return {
     type: ADD_TODO,
     payload: todo,
@@ -10,6 +28,7 @@ export function addTodo(todo: TodoResource): TodoActionType {
 }
 
 export function getTodosFetching(payload: boolean): TodoActionType {
+  console.log("getTodosFetching");
   return {
     type: GET_TODOS_FETCHING,
     payload,
@@ -17,13 +36,17 @@ export function getTodosFetching(payload: boolean): TodoActionType {
 }
 
 export function getTodosError(payload: string): TodoActionType {
+  console.log("getTodosError");
   return {
     type: GET_TODOS_ERROR,
     payload,
   };
 }
 
-export const getTodos = (): AppThunk<void> => async (dispatch): Promise<void> => {
+export const getTodos = (): ThunkAction<void, RootState, unknown, TodoActionType> => async (
+  dispatch,
+): Promise<void> => {
+  console.log("getTodos");
   dispatch(getTodosFetching(true));
   const response = await client.getTodos();
   switch (response.status) {

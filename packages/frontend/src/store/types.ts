@@ -3,6 +3,12 @@ import { ThunkAction } from "redux-thunk";
 import { TodoResource } from "backend/src/resources/todo";
 import { RootState } from ".";
 
+export const SET_FILTER_TAG = "SET_FILTER_TAG";
+export type SetFilterTagAction = {
+  type: typeof SET_FILTER_TAG;
+  payload: string;
+};
+
 export const ADD_TODO = "ADD_TODO";
 export type AddTodoAction = {
   type: typeof ADD_TODO;
@@ -21,8 +27,11 @@ export type GetTodosErrorAction = {
   payload: string;
 };
 
-export type TodoActionType = AddTodoAction | GetTodosFetchingAction | GetTodosErrorAction; // | RemoveTodoAction
+export type TodoActionType = AddTodoAction | GetTodosFetchingAction | GetTodosErrorAction | SetFilterTagAction; // | RemoveTodoAction
 
+export type TodoStateTodos = {
+  [key: string]: TodoResource;
+};
 export type TodoStateTags = {
   [key: string]: {
     [key: string]: boolean;
@@ -31,11 +40,11 @@ export type TodoStateTags = {
 
 export type TodoState = {
   // mapping of todoId to TodoResource
-  todos: {
-    [key: string]: TodoResource;
-  };
+  todos: TodoStateTodos;
   // mapping of given tag to todoId to true/false
   tags: TodoStateTags;
+  // tag with which to filter todos
+  filterTag: string;
   fetching: {
     getTodos: boolean;
     getTodo: boolean;

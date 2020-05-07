@@ -1,8 +1,17 @@
-import { TodoState, TodoActionType, ADD_TODO, TodoStateTags, GET_TODOS_FETCHING, GET_TODOS_ERROR } from "./types";
+import {
+  TodoState,
+  TodoActionType,
+  ADD_TODO,
+  TodoStateTags,
+  GET_TODOS_FETCHING,
+  GET_TODOS_ERROR,
+  SET_FILTER_TAG,
+} from "./types";
 
 const initialState: TodoState = {
   todos: {},
   tags: {},
+  filterTag: "",
   fetching: {
     getTodo: false,
     getTodos: false,
@@ -17,6 +26,11 @@ const initialState: TodoState = {
 
 export function todoReducer(state = initialState, action: TodoActionType): TodoState {
   switch (action.type) {
+    case SET_FILTER_TAG:
+      return {
+        ...state,
+        filterTag: action.payload,
+      };
     case GET_TODOS_FETCHING:
       return {
         ...state,
@@ -40,6 +54,7 @@ export function todoReducer(state = initialState, action: TodoActionType): TodoS
         tags: ((): TodoStateTags => {
           const tags = state.tags;
           action.payload.tags.forEach((tag) => {
+            if (!tags[tag]) tags[tag] = {};
             tags[tag][action.payload.todoId] = true;
           });
           return tags;
