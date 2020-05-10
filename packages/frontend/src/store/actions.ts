@@ -3,7 +3,6 @@ import {
   TodoActionType,
   GET_TODOS_FETCHING,
   GET_TODOS_ERROR,
-  SetFilterTagAction,
   SET_FILTER_TAG,
   ADD_TODOS,
   POST_TODO_FETCHING,
@@ -14,7 +13,7 @@ import { TodoResource } from "backend/src/resources/todo";
 import { client } from "../services/client";
 import { AxiosError } from "axios";
 
-export function setFilterTag(payload: string): SetFilterTagAction {
+export function setFilterTag(payload: string): TodoActionType {
   console.log("setFilterTag");
   return {
     type: SET_FILTER_TAG,

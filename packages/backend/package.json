@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "NODE_ENV=development nodemon --watch src/ --ext ts --ignore src/__tests__ run.ts",
+    "start": "cross-env NODE_ENV=development nodemon --watch src/ --ext ts --ignore src/__tests__ run.ts",
     "test": "jest --runInBand",
     "lint": "eslint . --ext ts"
   },

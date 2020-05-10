@@ -1,0 +1,24 @@
+.Todo {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 0.5rem;
+  box-shadow: dimgrey;
+  margin-bottom: 1.5rem;
+}
+
+.TodoHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%
+}
+
+.TodoContent {
+  margin-right: 0.5rem;
+  flex: 4
+}
+
+.TodoDate {
+  flex: 1
+}

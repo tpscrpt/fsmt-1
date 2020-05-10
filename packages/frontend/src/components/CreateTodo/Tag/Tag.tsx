@@ -1,15 +1,12 @@
 import React from "react";
-import "./index.css";
+import "./Tag.css";
 
 type TagProps = { tag: string; deleteTag: () => void };
 
 export default function Tag({ tag, deleteTag }: TagProps): JSX.Element {
   return (
-    <div className="tag">
+    <div className="tag" onClick={deleteTag}>
       <span className="tagText">{tag}</span>
-      <span className="deleteTagX" onClick={deleteTag}>
-        &times;
-      </span>
     </div>
   );
 }

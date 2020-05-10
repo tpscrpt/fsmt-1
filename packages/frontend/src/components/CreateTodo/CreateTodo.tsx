@@ -4,7 +4,7 @@ import { RootState } from "../../store";
 import { postTodo } from "../../store/actions";
 import Tag from "./Tag/Tag";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import "./index.css";
+import "./CreateTodo.css";
 
 type StateProps = {
   fetching: boolean;
@@ -66,27 +66,29 @@ function CreateTodo(props: Props): JSX.Element {
   }
 
   return (
-    <div className="CreateTodo">
-      {ErrorMessage({ error })}
-      <label className="inputField">
-        Content
-        <br />
-        <input type="text" name="content" value={content} onChange={onChangeContent} />
-      </label>
-      <label className="inputField">
-        Tags (separate with comma)
-        <br />
-        <input type="text" name="tags" onChange={onChangeTags} />
-      </label>
-      <div className="tags">
-        {tags.map((tag, index) => (
-          <Tag key={index} tag={tag} deleteTag={(): void => deleteTag(index)} />
-        ))}
+    <div className="container">
+      <div className="bodyContainer">
+        <div className="CreateTodo">
+          {ErrorMessage({ error })}
+          <label className="inputField">
+            <span className="inputFieldLabel">Content</span>
+            <input type="text" name="content" value={content} onChange={onChangeContent} />
+          </label>
+          <label className="inputField">
+            <span className="inputFieldLabel">Tags</span>
+            <input type="text" name="tags" onChange={onChangeTags} />
+          </label>
+          <div className="tags">
+            {tags.map((tag, index) => (
+              <Tag key={index} tag={tag} deleteTag={(): void => deleteTag(index)} />
+            ))}
+          </div>
+          <br />
+          <button onClick={submitTodo} disabled={fetching || !content}>
+            {fetching ? "..." : "Submit"}
+          </button>
+        </div>
       </div>
-      <br />
-      <button onClick={submitTodo} disabled={fetching || !content}>
-        {fetching ? "..." : "Submit"}
-      </button>
     </div>
   );
 }

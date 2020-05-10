@@ -1,41 +1,43 @@
 import React from "react";
-import { connect, ConnectedProps } from "react-redux";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import FilterTodos from "./components/FilterTodos";
-import TodosList from "./components/TodosList";
 import CreateTodo from "./components/CreateTodo/CreateTodo";
-import { getTodos } from "./store/actions";
 import "./App.css";
-
-function App({ getTodos }: AppProps): JSX.Element {
-  return (
-    <Router>
-      <div className="App">
-        <header className="App-header">
-          <Link to="/">Todos</Link>
-          <span className="separator">|</span>
-          <Link to="/new">+</Link>
-        </header>
-        <Switch>
-          <Route path="/new">
-            <CreateTodo />
-          </Route>
-          <Route path="/">
-            <FilterTodos />
-            <button onClick={getTodos}>Get Todos</button>
-            <TodosList />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
-  );
-}
+import Home from "./components/Home/Home";
+import { getTodos } from "./store/actions";
+import { connect, ConnectedProps } from "react-redux";
 
 const mapDispatchToProps = {
   getTodos,
 };
 
 const connector = connect(null, mapDispatchToProps);
-type AppProps = ConnectedProps<typeof connector>;
+
+type Props = ConnectedProps<typeof connector>;
+
+function App({ getTodos }: Props): JSX.Element {
+  console.log("rendering App");
+  getTodos();
+  return (
+    <Router>
+      <div className="App">
+        <div className="container">
+          <header className="App-header">
+            <Link to="/">Todos</Link>
+            <span className="separator">|</span>
+            <Link to="/new">+</Link>
+          </header>
+        </div>
+        <Switch>
+          <Route path="/new">
+            <CreateTodo />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
+  );
+}
 
 export default connector(App);
