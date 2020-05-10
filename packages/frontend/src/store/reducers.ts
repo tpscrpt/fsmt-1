@@ -8,6 +8,8 @@ import {
   SET_FILTER_TAG,
   ADD_TODOS,
   TodoStateTodos,
+  POST_TODO_FETCHING,
+  POST_TODO_ERROR,
 } from "./types";
 
 const initialState: TodoState = {
@@ -68,6 +70,10 @@ export function todoReducer(state = initialState, action: TodoActionType): TodoS
           });
           return tags;
         })(),
+        fetching: {
+          ...state.fetching,
+          postTodo: false,
+        },
       };
     case ADD_TODOS:
       return {
@@ -93,6 +99,22 @@ export function todoReducer(state = initialState, action: TodoActionType): TodoS
         fetching: {
           ...state.fetching,
           getTodos: false,
+        },
+      };
+    case POST_TODO_FETCHING:
+      return {
+        ...state,
+        fetching: {
+          ...state.fetching,
+          postTodo: true,
+        },
+      };
+    case POST_TODO_ERROR:
+      return {
+        ...state,
+        errors: {
+          ...state.errors,
+          postTodo: action.payload,
         },
       };
     default:

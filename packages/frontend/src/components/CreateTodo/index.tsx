@@ -1,12 +1,34 @@
 import React, { useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
 import Tag from "../Tag/";
+import { postTodo } from "../../store/actions";
 import "./index.css";
+import { RootState } from "../../store";
 
-export default function CreateTodo(): JSX.Element {
+type StateProps = {
+  fetching: boolean;
+};
+
+const mapStateToProps = (state: RootState): StateProps => ({
+  fetching: state.todo.fetching.postTodo,
+});
+
+const mapDispatchToProps = {
+  postTodo,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type Props = ConnectedProps<typeof connector>;
+
+function CreateTodo(props: Props): JSX.Element {
+  const { fetching, postTodo } = props;
+
   const [tags, setTags] = useState<string[]>([]);
+  const [content, setContent] = useState<string>("");
 
   function submitTodo(): void {
-    return;
+    postTodo(content as string, tags);
   }
 
   function onChangeTags(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -15,9 +37,12 @@ export default function CreateTodo(): JSX.Element {
       const withoutCommas = value.replace(/,/g, "");
       if (withoutCommas.length) {
         setTags([...tags, withoutCommas]);
-        event.target.value = "";
       }
     }
+  }
+
+  function onChangeContent(event: React.ChangeEvent<HTMLInputElement>): void {
+    setContent(event.target.value);
   }
 
   function deleteTag(index: number): void {
@@ -30,7 +55,7 @@ export default function CreateTodo(): JSX.Element {
       <label className="inputField">
         Content
         <br />
-        <input type="text" name="content" />
+        <input type="text" name="content" value={content} onChange={onChangeContent} />
       </label>
       <label className="inputField">
         Tags (separate with comma)
@@ -43,7 +68,11 @@ export default function CreateTodo(): JSX.Element {
         ))}
       </div>
       <br />
-      <button onClick={submitTodo}>Submit</button>
+      <button onClick={submitTodo} disabled={fetching || !content}>
+        {fetching ? "..." : "Submit"}
+      </button>
     </div>
   );
 }
+
+export default connector(CreateTodo);

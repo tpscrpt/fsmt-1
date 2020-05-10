@@ -1,7 +1,7 @@
-import { Action } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { TodoResource } from "backend/src/resources/todo";
 import { RootState } from ".";
+import { Action } from "redux";
 
 export const SET_FILTER_TAG = "SET_FILTER_TAG";
 export type SetFilterTagAction = {
@@ -24,7 +24,6 @@ export type AddTodosAction = {
 export const GET_TODOS_FETCHING = "GET_TODOS_FETCHING";
 export type GetTodosFetchingAction = {
   type: typeof GET_TODOS_FETCHING;
-  payload: boolean;
 };
 
 export const GET_TODOS_ERROR = "GET_TODOS_ERROR";
@@ -33,12 +32,25 @@ export type GetTodosErrorAction = {
   payload: string;
 };
 
+export const POST_TODO_FETCHING = "POST_TODO_FETCHING";
+export type PostTodoFetchingAction = {
+  type: typeof POST_TODO_FETCHING;
+};
+
+export const POST_TODO_ERROR = "POST_TODO_ERROR";
+export type PostTodoErrorAction = {
+  type: typeof POST_TODO_ERROR;
+  payload: string;
+};
+
 export type TodoActionType =
   | AddTodoAction
   | AddTodosAction
   | GetTodosFetchingAction
   | GetTodosErrorAction
-  | SetFilterTagAction; // | RemoveTodoAction
+  | SetFilterTagAction // | RemoveTodoAction
+  | PostTodoFetchingAction
+  | PostTodoErrorAction;
 
 export type TodoStateTodos = {
   [key: string]: TodoResource;

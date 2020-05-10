@@ -6,11 +6,13 @@ import {
   SetFilterTagAction,
   SET_FILTER_TAG,
   ADD_TODOS,
+  POST_TODO_FETCHING,
+  POST_TODO_ERROR,
+  AppThunk,
 } from "./types";
 import { TodoResource } from "backend/src/resources/todo";
 import { client } from "../services/client";
-import { ThunkAction } from "redux-thunk";
-import { RootState } from ".";
+import { AxiosError } from "axios";
 
 export function setFilterTag(payload: string): SetFilterTagAction {
   console.log("setFilterTag");
@@ -40,7 +42,6 @@ export function getTodosFetching(): TodoActionType {
   console.log("getTodosFetching");
   return {
     type: GET_TODOS_FETCHING,
-    payload: true,
   };
 }
 
@@ -52,18 +53,44 @@ export function getTodosError(payload: string): TodoActionType {
   };
 }
 
-export const getTodos = (): ThunkAction<void, RootState, unknown, TodoActionType> => async (
-  dispatch,
-): Promise<void> => {
+export const getTodos = (): AppThunk<void> => async (dispatch): Promise<void> => {
   console.log("getTodos");
   dispatch(getTodosFetching());
-  const response = await client.getTodos();
-  switch (response.status) {
-    case 200:
-      dispatch(addTodos(response.data.body as TodoResource[]));
-      break;
-    default:
-      dispatch(getTodosError(response.data.error || "Unknown"));
-      setTimeout(() => dispatch(getTodosError("")), 7500);
+  try {
+    const response = await client.getTodos();
+    dispatch(addTodos(response.data.body as TodoResource[]));
+  } catch (e) {
+    const _e = e as AxiosError<{ error: string }>;
+    dispatch(getTodosError(_e.response?.data.error || "Unknown"));
+    setTimeout(() => dispatch(getTodosError("")), 7500);
+  }
+};
+
+export function postTodoFetching(): TodoActionType {
+  console.log("postTodoFetching");
+  return {
+    type: POST_TODO_FETCHING,
+  };
+}
+
+export function postTodoError(payload: string): TodoActionType {
+  console.log("postTodoError");
+  return {
+    type: POST_TODO_ERROR,
+    payload,
+  };
+}
+
+export const postTodo = (content: string, tags: string[]): AppThunk<void> => async (dispatch): Promise<void> => {
+  console.log("postTodo");
+  dispatch(postTodoFetching());
+  try {
+    const postResponse = await client.postTodo({ content, tags });
+    const getResponse = await client.getTodo(postResponse.data.body as string);
+    dispatch(addTodo(getResponse.data.body as TodoResource));
+  } catch (e) {
+    const _e = e as AxiosError<{ error: string }>;
+    dispatch(postTodoError(_e.response?.data.error || "Unknown"));
+    setTimeout(() => dispatch(postTodoError("")), 7500);
   }
 };
