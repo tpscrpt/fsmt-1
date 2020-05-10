@@ -4,7 +4,7 @@ import { RootState } from "../../store";
 import { postTodo } from "../../store/actions";
 import Tag from "./Tag/Tag";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import "./index.css";
+import "./CreateTodo.css";
 
 type StateProps = {
   fetching: boolean;
