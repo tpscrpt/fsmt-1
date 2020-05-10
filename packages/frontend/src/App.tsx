@@ -1,13 +1,10 @@
 import React from "react";
-import { connect, ConnectedProps } from "react-redux";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import FilterTodos from "./components/FilterTodos";
-import TodosList from "./components/TodosList";
 import CreateTodo from "./components/CreateTodo/CreateTodo";
-import { getTodos } from "./store/actions";
 import "./App.css";
+import Home from "./components/Home/Home";
 
-function App({ getTodos }: AppProps): JSX.Element {
+function App(): JSX.Element {
   return (
     <Router>
       <div className="App">
@@ -21,9 +18,7 @@ function App({ getTodos }: AppProps): JSX.Element {
             <CreateTodo />
           </Route>
           <Route path="/">
-            <FilterTodos />
-            <button onClick={getTodos}>Get Todos</button>
-            <TodosList />
+            <Home />
           </Route>
         </Switch>
       </div>
@@ -31,11 +26,4 @@ function App({ getTodos }: AppProps): JSX.Element {
   );
 }
 
-const mapDispatchToProps = {
-  getTodos,
-};
-
-const connector = connect(null, mapDispatchToProps);
-type AppProps = ConnectedProps<typeof connector>;
-
-export default connector(App);
+export default App;

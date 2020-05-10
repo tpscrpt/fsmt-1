@@ -1,9 +1,25 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
-import { RootState } from "../store";
-import { setFilterTag } from "../store/actions";
+import { connect, ConnectedProps } from "react-redux";
+import { RootState } from "../../store";
+import { setFilterTag } from "../../store/actions";
 
-function FilterTodos({ tags, setFilterTag }: FilterTodosProps): JSX.Element {
+type StateProps = {
+  tags: string[];
+};
+
+const mapStateToProps = (state: RootState): StateProps => ({
+  tags: Object.keys(state.todo.tags),
+});
+
+const mapDispatchToProps = {
+  setFilterTag,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type Props = ConnectedProps<typeof connector>;
+
+function FilterTodos({ tags, setFilterTag }: Props): JSX.Element {
   const [selectedTag, setSelectedTag] = useState("");
 
   function handleClick(tag: string): void {
@@ -25,19 +41,5 @@ function FilterTodos({ tags, setFilterTag }: FilterTodosProps): JSX.Element {
     </div>
   );
 }
-
-type FilterTodosStateProps = {
-  tags: string[];
-};
-
-const mapStateToProps = (state: RootState): FilterTodosStateProps => ({
-  tags: Object.keys(state.todo.tags),
-});
-
-const mapDispatchToProps = {
-  setFilterTag,
-};
-
-type FilterTodosProps = FilterTodosStateProps & typeof mapDispatchToProps;
 
 export default connect(mapStateToProps, mapDispatchToProps)(FilterTodos);
