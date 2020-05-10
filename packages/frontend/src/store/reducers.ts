@@ -112,6 +112,10 @@ export function todoReducer(state = initialState, action: TodoActionType): TodoS
     case POST_TODO_ERROR:
       return {
         ...state,
+        fetching: {
+          ...state.fetching,
+          postTodo: false,
+        },
         errors: {
           ...state.errors,
           postTodo: action.payload,

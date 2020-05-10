@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import Tag from "../Tag/";
-import { postTodo } from "../../store/actions";
-import "./index.css";
 import { RootState } from "../../store";
+import { postTodo } from "../../store/actions";
+import Tag from "./Tag/Tag";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import "./index.css";
 
 type StateProps = {
   fetching: boolean;
+  error: string;
 };
 
 const mapStateToProps = (state: RootState): StateProps => ({
   fetching: state.todo.fetching.postTodo,
+  error: state.todo.errors.postTodo,
 });
 
 const mapDispatchToProps = {
@@ -22,10 +25,21 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type Props = ConnectedProps<typeof connector>;
 
 function CreateTodo(props: Props): JSX.Element {
-  const { fetching, postTodo } = props;
+  const { fetching, postTodo, error } = props;
 
   const [tags, setTags] = useState<string[]>([]);
   const [content, setContent] = useState<string>("");
+  const [wasFetching, setWasFetching] = useState<boolean>(false);
+
+  if (fetching && !wasFetching) {
+    setWasFetching(true);
+  } else if (!fetching && wasFetching) {
+    if (!error) {
+      setContent("");
+      setTags([]);
+    }
+    setWasFetching(false);
+  }
 
   function submitTodo(): void {
     postTodo(content as string, tags);
@@ -37,6 +51,7 @@ function CreateTodo(props: Props): JSX.Element {
       const withoutCommas = value.replace(/,/g, "");
       if (withoutCommas.length) {
         setTags([...tags, withoutCommas]);
+        event.target.value = "";
       }
     }
   }
@@ -52,6 +67,7 @@ function CreateTodo(props: Props): JSX.Element {
 
   return (
     <div className="CreateTodo">
+      {ErrorMessage({ error })}
       <label className="inputField">
         Content
         <br />

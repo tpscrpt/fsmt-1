@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import FilterTodos from "./components/FilterTodos";
 import TodosList from "./components/TodosList";
-import CreateTodo from "./components/CreateTodo/";
+import CreateTodo from "./components/CreateTodo/CreateTodo";
 import { getTodos } from "./store/actions";
 import "./App.css";
 
@@ -21,8 +21,8 @@ function App({ getTodos }: AppProps): JSX.Element {
             <CreateTodo />
           </Route>
           <Route path="/">
-            <button onClick={getTodos}>Get Todos</button>
             <FilterTodos />
+            <button onClick={getTodos}>Get Todos</button>
             <TodosList />
           </Route>
         </Switch>
