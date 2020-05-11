@@ -29,15 +29,17 @@ function FilterTodos({ tags, setFilterTag }: Props): JSX.Element {
   }
 
   return (
-    <div>
-      <h2>Pick a tag to filter todos with</h2>
-      <select>
-        {tags.map((tag) => (
-          <option key={tag} onClick={(): void => handleClick(tag)}>
-            {tag}
-          </option>
-        ))}
-      </select>
+    <div className="FilterTodos">
+      <label>
+        <span>Filter: </span>
+        <select>
+          {["", ...tags].map((tag) => (
+            <option key={tag} onClick={(): void => handleClick(tag)}>
+              {tag}
+            </option>
+          ))}
+        </select>
+      </label>
     </div>
   );
 }

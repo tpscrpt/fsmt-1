@@ -1,10 +1,10 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { TodoResource } from "backend/src/resources/todo";
-import { RootState } from "../../store";
-import { TodoStateTodos } from "../../store/types";
-import Todo from "../Todo";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import { RootState } from "../../../store";
+import { TodoStateTodos } from "../../../store/types";
+import Todo from "./Todo";
+import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 
 type StateProps = {
   todos: TodoResource[];

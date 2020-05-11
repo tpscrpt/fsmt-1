@@ -1,0 +1,7 @@
+.Todo {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  border-radius: 0.5rem;
+  box-shadow: dimgrey;
+}
