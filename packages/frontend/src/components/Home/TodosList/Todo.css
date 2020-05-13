@@ -11,14 +11,23 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%
+  width: 100%;
+  margin: 0.5rem 0;
 }
 
 .TodoContent {
-  margin-right: 0.5rem;
-  flex: 4
+  margin: 0.5rem
 }
 
 .TodoDate {
-  flex: 1
+}
+
+.TodoDelete {
+  margin-left: 2rem;
+  color: darkred;
+  font-weight: bold;
+}
+
+.TodoTags {
+  margin: 0.5rem
 }

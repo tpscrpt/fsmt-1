@@ -12,15 +12,17 @@ function Todo({ todo: { content, tags, created, todoId }, deleteTodo }: Props): 
   return (
     <div className="Todo">
       <div className="TodoHeader">
-        <span className="TodoContent">{content}</span>
         <span className="TodoDate">{new Date(created).toLocaleTimeString()}</span>
         <span className="TodoDelete" onClick={(): void => deleteTodo(todoId)}>
-          -
+          - remove
         </span>
       </div>
-      {tags.map((tag) => (
-        <span key={tag}>{tag}</span>
-      ))}
+      <span className="TodoContent">{content}</span>
+      <div className="TodoTags">
+        {tags.map((tag) => (
+          <span key={tag}>{tag}</span>
+        ))}
+      </div>
     </div>
   );
 }
