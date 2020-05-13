@@ -43,6 +43,23 @@ export type PostTodoErrorAction = {
   payload: string;
 };
 
+export const REMOVE_TODO = "REMOVE_TODO";
+export type RemoveTodoAction = {
+  type: typeof REMOVE_TODO;
+  payload: string;
+};
+
+export const DELETE_TODO_FETCHING = "DELETE_TODO_FETCHING";
+export type DeleteTodoFetchingAction = {
+  type: typeof DELETE_TODO_FETCHING;
+};
+
+export const DELETE_TODO_ERROR = "DELETE_TODO_ERROR";
+export type DeleteTodoErrorAction = {
+  type: typeof DELETE_TODO_ERROR;
+  payload: string;
+};
+
 export type TodoActionType =
   | AddTodoAction
   | AddTodosAction
@@ -50,7 +67,10 @@ export type TodoActionType =
   | GetTodosErrorAction
   | SetFilterTagAction // | RemoveTodoAction
   | PostTodoFetchingAction
-  | PostTodoErrorAction;
+  | PostTodoErrorAction
+  | RemoveTodoAction
+  | DeleteTodoFetchingAction
+  | DeleteTodoErrorAction;
 
 export type TodoStateTodos = {
   [key: string]: TodoResource;
@@ -64,6 +84,7 @@ export type TodoStateFetching = {
   getTodos: boolean;
   getTodo: boolean;
   postTodo: boolean;
+  deleteTodo: boolean;
 };
 export type TodoState = {
   // mapping of todoId to TodoResource
@@ -77,6 +98,7 @@ export type TodoState = {
     getTodos: string;
     getTodo: string;
     postTodo: string;
+    deleteTodo: string;
   };
 };
 

@@ -4,6 +4,7 @@ import { RootState } from "../../../store";
 import Todo from "./Todo";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 import { TodoStateTodos } from "../../../store/types";
+import { deleteTodo } from "../../../store/actions";
 
 type StateProps = {
   todos: TodoStateTodos;
@@ -19,11 +20,15 @@ const mapStateToProps = (state: RootState): StateProps => ({
   filterTag: state.todo.filterTag,
 });
 
-const connector = connect(mapStateToProps);
+const mapDispatchToProps = {
+  deleteTodo,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type Props = ConnectedProps<typeof connector>;
 
-function TodosList({ todos, fetching, error, filterTag }: Props): JSX.Element {
+function TodosList({ todos, fetching, error, filterTag, deleteTodo }: Props): JSX.Element {
   console.log("Rendering todos list");
 
   const filteredTodos = Object.values(todos).filter((todo) => !filterTag || todo.tags.includes(filterTag));
@@ -32,7 +37,11 @@ function TodosList({ todos, fetching, error, filterTag }: Props): JSX.Element {
     <div className="bodyContainer">
       <div style={{ width: "100%" }}>
         {ErrorMessage({ error })}
-        {fetching ? <p>Fetching...</p> : filteredTodos.map((todo) => <Todo todo={todo} key={todo.todoId} />)}
+        {fetching ? (
+          <p>Fetching...</p>
+        ) : (
+          filteredTodos.map((todo) => <Todo todo={todo} key={todo.todoId} deleteTodo={deleteTodo} />)
+        )}
       </div>
     </div>
   );

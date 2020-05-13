@@ -1,12 +1,16 @@
-import Axios, { AxiosResponse } from "axios";
+import Axios, { AxiosResponse, AxiosError } from "axios";
 import {
   GetTodosResponseData,
   PostTodoResponseData,
   PostTodoRequestBody,
   GetTodoResponseData,
+  DeleteTodoRequestParams,
+  DeleteTodoResponseData,
 } from "backend/src/routes/todos";
 
 type ClientResponse<T> = Promise<AxiosResponse<T>>;
+
+export type ClientError = AxiosError<{ error: string }>;
 
 class Client {
   private baseUrl: string;
@@ -25,6 +29,10 @@ class Client {
 
   public postTodo(body: PostTodoRequestBody): ClientResponse<PostTodoResponseData> {
     return Axios.post(`${this.baseUrl}/todo`, body);
+  }
+
+  public deleteTodo(params: DeleteTodoRequestParams): ClientResponse<DeleteTodoResponseData> {
+    return Axios.delete(`${this.baseUrl}/todo/${params.todoId}`);
   }
 }
 
