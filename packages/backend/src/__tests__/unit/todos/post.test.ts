@@ -6,6 +6,7 @@ import { setup } from "../../../main";
 import { PostTodoResponseData, PostTodoRequestBody } from "../../../routes/todos";
 import { todos } from "../../__fixtures__/todos";
 import { uuidRegex } from "../../__fixtures__/constants";
+import { TEST_PORT } from "../../../constants";
 
 let server: Server;
 let mongoDb: MongoMemoryServer;
@@ -28,14 +29,14 @@ afterEach(async () => {
 
 describe("Post todo", () => {
   it("should return 200 status and a valid uuid", async () => {
-    const response = await Axios.post<PostTodoResponseData>("http://localhost:9000/todo", postTodoRequestBody);
+    const response = await Axios.post<PostTodoResponseData>(`http://localhost:${TEST_PORT}/todo`, postTodoRequestBody);
     expect(response.status).toBe(200);
     expect(response.data.body).toMatch(uuidRegex);
     expect(response.data.error).not.toBeDefined();
   });
   it("should fail with 400 bad request", async () => {
     try {
-      const response = await Axios.post<PostTodoResponseData>("http://localhost:9000/todo", {
+      const response = await Axios.post<PostTodoResponseData>(`http://localhost:${TEST_PORT}/todo`, {
         content: postTodoRequestBody.content,
         tags: "",
       });

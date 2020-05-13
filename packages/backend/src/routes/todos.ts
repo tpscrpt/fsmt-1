@@ -3,17 +3,30 @@ import { Router, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import { TodoResource, Todo } from "../resources/todo";
 import { Route } from "../classes/route";
-import { BodyOnlyPostRequest, ResponseData, ParamsOnlyGetRequest } from "../types/request";
+import { BodyOnlyPostRequest, ResponseData, ParamsOnlyRequest } from "../types/request";
 import { invalidProperty, $ } from "../errors";
 
 const router = Router();
 
+export type DeleteTodoRequestParams = {
+  todoId: string;
+};
+export type DeleteTodoRequest = ParamsOnlyRequest<DeleteTodoRequestParams>;
+export type DeleteTodoResponseData = ResponseData<null>;
+router.delete("/:todoId", async (req: DeleteTodoRequest, res: Response<DeleteTodoResponseData>) => {
+  const { todoId } = req.params;
+  const status = await Todo.deleteOne({ todoId });
+  if (!status.deletedCount || status.deletedCount < 1) {
+    res.status(404);
+  }
+  res.send();
+});
+
 export type GetTodoRequestParams = {
   todoId: string;
 };
-export type GetTodoRequest = ParamsOnlyGetRequest<GetTodoRequestParams>;
+export type GetTodoRequest = ParamsOnlyRequest<GetTodoRequestParams>;
 export type GetTodoResponseData = ResponseData<TodoResource>;
-
 router.get("/:todoId", async (req: GetTodoRequest, res: Response<GetTodoResponseData>) => {
   const { todoId } = req.params;
   res.setHeader("Content-Type", "application/json");
