@@ -5,12 +5,11 @@ import { TodoResource, Todo } from "../resources/todo";
 import { Route } from "../classes/route";
 import { BodyOnlyPostRequest, ResponseData, ParamsOnlyRequest } from "../types/request";
 import { invalidProperty, $ } from "../errors";
+import { uuidRegex } from "../__tests__/__fixtures__/constants";
 
 const router = Router();
 
-export type DeleteTodoRequestParams = {
-  todoId: string;
-};
+export type DeleteTodoRequestParams = { todoId: string };
 export type DeleteTodoRequest = ParamsOnlyRequest<DeleteTodoRequestParams>;
 export type DeleteTodoResponseData = ResponseData<null>;
 router.delete("/:todoId", async (req: DeleteTodoRequest, res: Response<DeleteTodoResponseData>) => {
@@ -22,33 +21,39 @@ router.delete("/:todoId", async (req: DeleteTodoRequest, res: Response<DeleteTod
   res.send();
 });
 
-export type GetTodoRequestParams = {
-  todoId: string;
-};
-export type GetTodoRequest = ParamsOnlyRequest<GetTodoRequestParams>;
+export type GetTodoRequestParams = { todoId: string };
+export type GetTodoRequest = ParamsOnlyRequest<Partial<GetTodoRequestParams>>;
 export type GetTodoResponseData = ResponseData<TodoResource>;
-router.get("/:todoId", async (req: GetTodoRequest, res: Response<GetTodoResponseData>) => {
-  const { todoId } = req.params;
-  res.setHeader("Content-Type", "application/json");
-  const todo = await Todo.findOne({
-    todoId,
-  });
-  const typedTodo = todo as TodoResource;
-  res.send({
-    body: {
-      content: typedTodo.content,
-      tags: typedTodo.tags,
-      created: typedTodo.created,
-      todoId: typedTodo.todoId,
-    },
-  });
-});
+router.get(
+  "/:todoId",
+  $(async (req: GetTodoRequest, res: Response<GetTodoResponseData>) => {
+    const { todoId } = req.params;
+    assert(todoId && uuidRegex.test(todoId), invalidProperty("todoId"));
+    const todo = await Todo.findOne({
+      todoId,
+    });
+    if (!todo) {
+      res.status(404);
+      res.send();
+      return;
+    }
+    const typedTodo = todo as TodoResource;
+    res.setHeader("Content-Type", "application/json");
+    res.send({
+      body: {
+        content: typedTodo.content,
+        tags: typedTodo.tags,
+        created: typedTodo.created,
+        todoId: typedTodo.todoId,
+      },
+    });
+  }),
+);
 
 export type GetTodosResponseData = ResponseData<TodoResource[]>;
-
 router.get("/", async (_, res: Response<GetTodosResponseData>) => {
-  res.setHeader("Content-Type", "application/json");
   const todos: TodoResource[] = await Todo.find();
+  res.setHeader("Content-Type", "application/json");
   res.send({
     // we need to extract the values we want because it's not done by default
     // alternative is to use .select but that's more work for no gain
@@ -61,13 +66,9 @@ router.get("/", async (_, res: Response<GetTodosResponseData>) => {
   });
 });
 
-export type PostTodoRequestBody = {
-  content: string;
-  tags: string[];
-};
-type PostTodoRequest = BodyOnlyPostRequest<PostTodoRequestBody>;
+export type PostTodoRequestBody = { content: string; tags: string[] };
+export type PostTodoRequest = BodyOnlyPostRequest<PostTodoRequestBody>;
 export type PostTodoResponseData = ResponseData<string>;
-
 router.post(
   "/",
   $(async (req: PostTodoRequest, res: Response<PostTodoResponseData>) => {
