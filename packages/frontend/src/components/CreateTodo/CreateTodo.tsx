@@ -72,11 +72,11 @@ function CreateTodo(props: Props): JSX.Element {
           {ErrorMessage({ error })}
           <label className="inputField">
             <span className="inputFieldLabel">Content</span>
-            <input type="text" name="content" value={content} onChange={onChangeContent} />
+            <input type="text" name="content" aria-label="todo-content" value={content} onChange={onChangeContent} />
           </label>
           <label className="inputField">
             <span className="inputFieldLabel">Tags</span>
-            <input type="text" name="tags" onChange={onChangeTags} />
+            <input type="text" name="tags" aria-label="todo-tags" onChange={onChangeTags} />
           </label>
           <div className="tags">
             {tags.map((tag, index) => (

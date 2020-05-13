@@ -15,7 +15,7 @@ import {
   DELETE_TODO_ERROR,
 } from "./types";
 
-const initialState: TodoState = {
+export const initialState: TodoState = {
   todos: {},
   tags: {},
   filterTag: "",

@@ -16,7 +16,14 @@ class Client {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = "http://localhost:9000";
+    this.baseUrl =
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:9000"
+        : process.env.NODE_ENV === "test"
+        ? "http://localhost:9001"
+        : process.env.NODE_ENV === "production"
+        ? process.env.PUBLIC_URL
+        : "";
   }
 
   public getTodos(): ClientResponse<GetTodosResponseData> {
