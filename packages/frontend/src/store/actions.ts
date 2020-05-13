@@ -8,9 +8,12 @@ import {
   POST_TODO_FETCHING,
   POST_TODO_ERROR,
   AppThunk,
+  DELETE_TODO_FETCHING,
+  DELETE_TODO_ERROR,
+  REMOVE_TODO,
 } from "./types";
 import { TodoResource } from "backend/src/resources/todo";
-import { client } from "../services/client";
+import { client, ClientError } from "../services/client";
 import { AxiosError } from "axios";
 
 export function setFilterTag(payload: string): TodoActionType {
@@ -91,5 +94,40 @@ export const postTodo = (content: string, tags: string[]): AppThunk<void> => asy
     const _e = e as AxiosError<{ error: string }>;
     dispatch(postTodoError(_e.response?.data.error || "Unknown"));
     setTimeout(() => dispatch(postTodoError("")), 7500);
+  }
+};
+
+export function removeTodo(payload: string): TodoActionType {
+  console.log("removeTodo");
+  return {
+    type: REMOVE_TODO,
+    payload,
+  };
+}
+
+export function deleteTodoError(payload: string): TodoActionType {
+  return {
+    type: DELETE_TODO_ERROR,
+    payload,
+  };
+}
+
+export function deleteTodoFetching(): TodoActionType {
+  console.log("deleteTodoFetching");
+  return {
+    type: DELETE_TODO_FETCHING,
+  };
+}
+
+export const deleteTodo = (todoId: string): AppThunk<void> => async (dispatch): Promise<void> => {
+  console.log("deleteTodo");
+  dispatch(deleteTodoFetching());
+  try {
+    await client.deleteTodo({ todoId });
+    dispatch(removeTodo(todoId));
+  } catch (e) {
+    const _e = e as ClientError;
+    dispatch(deleteTodoError(_e.response?.data.error || "Unknown"));
+    setTimeout(() => dispatch(deleteTodoError("")), 7500);
   }
 };

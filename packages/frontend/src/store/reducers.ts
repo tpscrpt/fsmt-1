@@ -10,6 +10,9 @@ import {
   TodoStateTodos,
   POST_TODO_FETCHING,
   POST_TODO_ERROR,
+  REMOVE_TODO,
+  DELETE_TODO_FETCHING,
+  DELETE_TODO_ERROR,
 } from "./types";
 
 const initialState: TodoState = {
@@ -20,11 +23,13 @@ const initialState: TodoState = {
     getTodo: false,
     getTodos: false,
     postTodo: false,
+    deleteTodo: false,
   },
   errors: {
     getTodos: "",
     getTodo: "",
     postTodo: "",
+    deleteTodo: "",
   },
 };
 
@@ -119,6 +124,50 @@ export function todoReducer(state = initialState, action: TodoActionType): TodoS
         errors: {
           ...state.errors,
           postTodo: action.payload,
+        },
+      };
+    case REMOVE_TODO:
+      return {
+        ...state,
+        fetching: {
+          ...state.fetching,
+          deleteTodo: false,
+        },
+        todos: ((): TodoStateTodos => {
+          const todos = { ...state.todos };
+          delete todos[action.payload];
+          return todos;
+        })(),
+        tags: ((): TodoStateTags => {
+          const tags = { ...state.tags };
+          const todo = state.todos[action.payload];
+          todo.tags.forEach((tag) => {
+            delete tags[tag][action.payload];
+            if (!Object.keys(tags[tag]).length) {
+              delete tags[tag];
+            }
+          });
+          return tags;
+        })(),
+      };
+    case DELETE_TODO_FETCHING:
+      return {
+        ...state,
+        fetching: {
+          ...state.fetching,
+          deleteTodo: true,
+        },
+      };
+    case DELETE_TODO_ERROR:
+      return {
+        ...state,
+        fetching: {
+          ...state.fetching,
+          deleteTodo: false,
+        },
+        errors: {
+          ...state.errors,
+          deleteTodo: action.payload,
         },
       };
     default:
