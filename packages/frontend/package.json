@@ -10,7 +10,7 @@
     "lint": "eslint . --ext ts,tsx"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^1.8.2",
     "backend": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
